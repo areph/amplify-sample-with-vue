@@ -84,7 +84,9 @@ export default class Chat extends Vue {
       this.subscription.unsubscribe();
     }
 
-    // // updated = scrollBottom();
+    updated() {
+      this.scrollBottom();
+    }
 }
 </script>
 
