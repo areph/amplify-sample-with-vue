@@ -2,21 +2,15 @@
   <div>
     <div class="title">チャットアプリ</div>
     <div class="main-contents">
-      <div v-for="message in messages" :key="message.id">
-        <div
-          v-bind:class="[
-            message.username === userName ? 'message' : 'message_opponent',
-          ]"
-        >
-          {{ message.content }}
+      <div class="message_base">
+        <div v-for="message in messages" :key="message.id">
+          <div v-bind:class="[message.username === userName ? 'message' : 'message_opponent']">
+            {{ message.content }}
+          </div>
+          <div v-bind:class="[message.username === userName ? 'username' : 'username_opponent']">
+            {{message.username}}
+          </div>
         </div>
-      </div>
-      <div
-        v-bind:class="[
-          message.username === userName ? 'username' : 'username_opponent',
-        ]"
-      >
-        {{ message.username }}
       </div>
     </div>
     <el-input
@@ -45,15 +39,31 @@ export default class Chat extends Vue {
     subscription = {};
     error = '';
 
-    sendMessage() {
+    sendMessage(event: KeyboardEvent & { currentTarget: HTMLDivElement }) {
+      if (event.keyCode !== 13) return;
+      const message = {
+        id: new Date().getTime() + this.userName,
+        username: this.userName,
+        content: this.content
+      }
+      API.graphql(graphqlOperation(createMessage, {input: message})).catch(error => this.error = JSON.stringify(error))
+      this.content = "";
 
     }
 
     fetch() {
-
+      API.graphql(graphqlOperation(listMessages, { limit: 100 }))
+        .then(messages => this.messages = messages.data.listMessages.items.sort((a, b) => a.id > b.id ? 1: -1))
+        .catch(error => this.error = JSON.stringify(error));
     }
 
     subscribe() {
+      this.subscription = API.graphql(graphqlOperation(onCreateMessage)).subscribe({
+        next: (eventDate) => {
+          const message = eventDate.value.data.onCreateMessage;
+          this.messages.push(message);
+        }
+      })
 
     }
 
@@ -71,11 +81,11 @@ export default class Chat extends Vue {
     }
 
     beforeDestroy() {
-
+      this.subscription.unsubscribe();
     }
 
-    // updated = scrollBottom();
+    // // updated = scrollBottom();
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style src="./assets/chat.css" />
