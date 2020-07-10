@@ -40,6 +40,17 @@
   font-size: 14px;
 }
 
+.senddate {
+  text-align: right;
+  margin: -12px 0px 0px 10px;
+  font-size: 14px;
+}
+.senddate_opponent {
+  text-align: left;
+  margin: -12px 0px 0px 10px;
+  font-size: 14px;
+}
+
 .error {
   color: red;
 }

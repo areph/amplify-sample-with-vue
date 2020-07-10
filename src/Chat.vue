@@ -8,7 +8,7 @@
             {{ message.content }}
           </div>
           <div v-bind:class="[message.username === userName ? 'username' : 'username_opponent']">
-            {{message.username}}
+            {{message.username}}<span v-bind:class="[message.username === userName ? 'senddate' : 'senddate_opponent']">{{message.createdAt}}</span>
           </div>
         </div>
       </div>
