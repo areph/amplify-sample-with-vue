@@ -40,7 +40,7 @@ export default class Chat extends Vue {
     error = '';
 
     sendMessage(event: KeyboardEvent & { currentTarget: HTMLDivElement }) {
-      if (event.keyCode !== 13) return;
+      if (event.keyCode !== 13 || this.content == "") return;
       const message = {
         id: new Date().getTime() + this.userName,
         username: this.userName,
