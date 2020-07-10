@@ -41,9 +41,17 @@ export default class App extends Vue {
   signedIn = false
   username = ''
   public authConfig = {
+    signInConfig: {
+      header: 'ログイン',
+      /* isSignUpDisplayed: false ユーザー登録させたくないときに有効化 */
+    },
     signUpConfig: {
       defaultContryCode: "44",
-      hiddenDefaults: ["phone_number"]
+      hiddenDefaults: ["phone_number"],
+      signUpFields: [
+        { label: 'ユーザーID', key: 'username', required: true, type: 'email', displayOrder: 0 },
+        { label: 'パスワード', key: 'password', required: true, type: 'password', displayOrder: 1 }
+      ]
     }
   }
 
