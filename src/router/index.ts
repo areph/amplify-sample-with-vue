@@ -1,23 +1,33 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
-import Home from '../views/Home.vue'
+import AI from '../AI.vue'
+import Chat from '../Chat.vue'
+import Analytics from '../Analytics.vue'
+import WebPush from '../WebPush.vue'
 
 Vue.use(VueRouter)
 
   const routes: Array<RouteConfig> = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/ai',
+    name: 'AI',
+    component: AI
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/chat',
+    name: 'chat',
+    component: Chat
+  },
+  {
+    path: '/analytics',
+    name: 'analytics',
+    component: Analytics
+  },
+  {
+    path: '/webpush',
+    name: 'webpush',
+    component: WebPush
+  },
 ]
 
 const router = new VueRouter({
