@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@aws-amplify/cli": "^4.23.1",
+    "aws-amplify": "^3.0.20",
+    "aws-amplify-vue": "^2.1.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
     "register-service-worker": "^1.7.1",
