@@ -53,34 +53,36 @@ export default class Chat extends Vue {
   messages: any[] = [];
   content = "";
   userName = "";
-  subscription = {};
+  subscription: any = {};
   error = "";
 
-  sendMessage(event: KeyboardEvent & { currentTarget: HTMLDivElement }) {
+  async sendMessage(event: KeyboardEvent & { currentTarget: HTMLDivElement }) {
     if (event.keyCode !== 13 || this.content == "") return;
     const message = {
       id: new Date().getTime() + this.userName,
       username: this.userName,
       content: this.content,
     };
-    API.graphql(graphqlOperation(createMessage, { input: message })).catch(
-      (error) => (this.error = JSON.stringify(error))
-    );
+    try {
+      await API.graphql(graphqlOperation(createMessage, { input: message }));
+    } catch (error) {
+      this.error = JSON.stringify(error);
+    }
     this.content = "";
   }
 
   async fetch() {
     try {
-      const messageData = await API.graphql(
+      const messageData = (await API.graphql(
         graphqlOperation(listMessages, { limit: 100 })
-      ) as GraphQLResult<ListMessagesQuery>;
+      )) as GraphQLResult<ListMessagesQuery>;
       if (messageData?.data?.listMessages?.items) {
         this.messages = messageData.data.listMessages.items.sort((a, b) => {
           if (a && b) {
-            return a.id > b.id ? 1 : -1
+            return a.id > b.id ? 1 : -1;
           }
-          return 0
-        })
+          return 0;
+        });
       }
     } catch (error) {
       this.error = JSON.stringify(error);
@@ -88,14 +90,15 @@ export default class Chat extends Vue {
   }
 
   subscribe() {
-    this.subscription = API.graphql(
-      graphqlOperation(onCreateMessage)
-    ).subscribe({
-      next: (eventDate) => {
-        const message = eventDate.value.data.onCreateMessage;
-        this.messages.push(message);
-      },
-    });
+    this.subscription = API.graphql(graphqlOperation(onCreateMessage));
+    if ("subscribe" in this.subscription) {
+      this.subscription.subscribe({
+        next: (eventDate: any) => {
+          const message = eventDate.value.data.onCreateMessage;
+          this.messages.push(message);
+        },
+      });
+    }
   }
 
   scrollBottom() {
